@@ -6,3 +6,4 @@ export const routes: Routes = [
     { path: '', component: StartScreenComponent, },
     { path: 'game', component: GameComponent, },
 ];
+
