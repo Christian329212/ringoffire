@@ -11,8 +11,9 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { GameInfoComponent } from '../game-info/game-info.component';
 import { MatCardModule } from '@angular/material/card';
-import { Firestore, FirestoreModule, collection, collectionData } from '@angular/fire/firestore';
+import { Firestore, FirestoreModule, collection, collectionData, doc, setDoc, addDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+
 
 @Component({
   selector: 'app-game',
@@ -38,9 +39,9 @@ export class GameComponent implements OnInit {
     });
   }
 
-  newGame() {
+  async newGame() {
     this.game = new Game();
-    this.firestore.collection('games').add({ 'Hallo': 'Welt' });
+    await addDoc(collection(this.firestore, 'games'), { 'Hallo': 'Welt' });
   }
 
   takeCard() {
