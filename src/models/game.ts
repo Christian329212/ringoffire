@@ -1,4 +1,9 @@
+import { CollectionReference, DocumentData } from "@angular/fire/firestore";
+
 export class Game {
+    add(arg0: CollectionReference<DocumentData, DocumentData>, arg1: { players: string[]; stack: string[]; playedCard: string[]; currentPlayer: number; }) {
+        throw new Error('Method not implemented.');
+    }
     public players: string[] = [];
     public stack: string[] = [];
     public playedCard: string[] = [];
@@ -12,6 +17,15 @@ export class Game {
             this.stack.push('diamonds_' + i);
         }
         shuffle(this.stack);
+    }
+
+    public toJson() {
+        return {
+            players: this.players,
+            stack: this.stack,
+            playedCard: this.playedCard,
+            currentPlayer: this.currentPlayer
+        };
     }
 }
 

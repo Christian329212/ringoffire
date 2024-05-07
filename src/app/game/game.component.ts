@@ -11,8 +11,9 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { GameInfoComponent } from '../game-info/game-info.component';
 import { MatCardModule } from '@angular/material/card';
-import { Firestore, FirestoreModule, collection, collectionData, doc, setDoc, addDoc } from '@angular/fire/firestore';
+import { Firestore, FirestoreModule, doc, docData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -27,21 +28,29 @@ export class GameComponent implements OnInit {
   pickCardAnimation = false;
   currentCard: string = '';
   game: Game = new Game;
-  game$!: Observable<any[]>;
+  game$!: Observable<any>;
+  gameId: string = '';
 
-  constructor(public dialog: MatDialog) { }
+  constructor(private route: ActivatedRoute, public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    const gameCollection = collection(this.firestore, 'games');
-    this.game$ = collectionData(gameCollection);
-    this.game$.subscribe(game => {
-      console.log('Game update', game);
+    this.route.params.subscribe((params) => {
+      this.gameId = params['id'];
+      console.log(this.gameId);
+      const gameDocRef = doc(this.firestore, 'games', this.gameId);
+      this.game$ = docData(gameDocRef);
+      this.game$.subscribe(game => {
+        console.log('Game update', game);
+        this.game.currentPlayer = game.currentPlayer;
+        this.game.playedCard = game.playedCard;
+        this.game.players = game.players;
+        this.game.stack = game.stack;
+      });
     });
   }
 
-  async newGame() {
+  newGame() {
     this.game = new Game();
-    await addDoc(collection(this.firestore, 'games'), { 'Hallo': 'Welt' });
   }
 
   takeCard() {
