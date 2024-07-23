@@ -18,6 +18,18 @@
         position: absolute;
         width: 120px;
     }
+
+    @media (max-height: 700px) {
+        img {
+            width: 100px;
+        }
+    }
+
+    @media (max-width: 700px) {
+        img {
+            width: 100px;
+        }
+    }
 }
 
 .top-card {
@@ -74,4 +86,55 @@
     bottom: 32px;
     left: 100px;
     right: 100px;
+
+    @media (max-width: 720px) {
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+}
+
+.scroll-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    app-player-mobile {
+        margin-left: 8px;
+    }
+}
+
+app-player,
+app-player-mobile {
+    cursor: pointer;
+
+    &:hover {
+        filter: brightness(1.15);
+    }
+}
+
+.gameOver {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        width: 300px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .hide-mobile {
+        display: none;
+    }
+}
+
+@media (min-width: 1000px) {
+    .hide-desktop {
+        display: none;
+    }
 }

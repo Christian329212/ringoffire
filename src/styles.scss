@@ -5,6 +5,7 @@ body {
 html,
 body {
     height: 100%;
+    overflow: hidden;
 }
 
 body {
@@ -20,4 +21,16 @@ body {
 body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+@media (max-width: 1000px) {
+    .hide-mobile {
+        display: none;
+    }
+}
+
+@media (min-width: 1000px) {
+    .hide-desktop {
+        display: none;
+    }
 }

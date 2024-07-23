@@ -14,12 +14,14 @@ import { MatCardModule } from '@angular/material/card';
 import { Firestore, FirestoreModule, doc, docData, setDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { PlayerMobileComponent } from '../player-mobile/player-mobile.component';
+import { EditPlayerComponent } from '../edit-player/edit-player.component';
 
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [CommonModule, PlayerComponent, MatButtonModule, MatIconModule, MatDialogModule, MatInputModule, FormsModule, GameInfoComponent, MatCardModule, FirestoreModule],
+  imports: [CommonModule, PlayerComponent, MatButtonModule, MatIconModule, MatDialogModule, MatInputModule, FormsModule, GameInfoComponent, MatCardModule, FirestoreModule, PlayerMobileComponent],
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss']
 })
@@ -28,6 +30,7 @@ export class GameComponent implements OnInit {
   game: Game = new Game;
   game$!: Observable<any>;
   gameId: string = '';
+  gameOver = false;
 
   constructor(private route: ActivatedRoute, public dialog: MatDialog) { }
 
@@ -43,6 +46,7 @@ export class GameComponent implements OnInit {
         this.game.currentPlayer = game.currentPlayer;
         this.game.playedCard = game.playedCard;
         this.game.players = game.players;
+        this.game.player_images = game.player_images;
         this.game.stack = game.stack;
         this.game.pickCardAnimation = game.pickCardAnimation;
         this.game.currentCard = game.currentCard;
@@ -55,7 +59,9 @@ export class GameComponent implements OnInit {
   }
 
   takeCard() {
-    if (!this.game.pickCardAnimation) {
+    if (this.game.stack.length == 0) {
+      this.gameOver = true;
+    } else if (!this.game.pickCardAnimation) {
       const poppedCard = this.game.stack.pop();
       if (poppedCard !== undefined) {
         this.game.currentCard = poppedCard as string;
@@ -72,12 +78,29 @@ export class GameComponent implements OnInit {
     }
   }
 
+  editPlayer(playerId: number) {
+    const dialogRef = this.dialog.open(EditPlayerComponent);
+    dialogRef.afterClosed().subscribe((change: string) => {
+      if (change) {
+        if (change == 'DELETE') {
+          this.game.players.splice(playerId, 1);
+          this.game.player_images.splice(playerId, 1);
+        } else {
+          this.game.player_images[playerId] = change;
+        }
+        this.saveGame();
+      }
+    });
+
+  }
+
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
 
     dialogRef.afterClosed().subscribe((name: string) => {
       if (name && name.length > 0) {
         this.game.players.push(name);
+        this.game.player_images.push('1.webp');
         this.saveGame();
       }
     });
